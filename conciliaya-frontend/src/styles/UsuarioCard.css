@@ -1,0 +1,44 @@
+/* Estilos para componentes de Usuario */
+
+.usuario-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: slideIn 0.3s ease-out;
+}
+
+.usuario-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.estado-activo {
+  background-color: #dcfce7;
+  color: #166534;
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+}
+
+/* Grid de usuarios */
+.usuarios-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Página de usuarios */
+.usuarios-page h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: var(--dark);
+}
+
+@media (max-width: 768px) {
+  .usuarios-grid {
+    grid-template-columns: 1fr;
+  }
+}

@@ -1,0 +1,54 @@
+/* Estilos para página de conflictos */
+
+.conflictos-page {
+  animation: fadeIn 0.5s ease-in;
+}
+
+.conflictos-page h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: var(--dark);
+}
+
+.filtros {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filtro-select {
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.filtro-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+.conflictos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+@media (max-width: 768px) {
+  .conflictos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .filtros {
+    flex-direction: column;
+  }
+
+  .filtro-select {
+    width: 100%;
+  }
+}

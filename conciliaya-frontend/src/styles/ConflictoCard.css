@@ -1,0 +1,227 @@
+/* Estilos para componentes de Conflicto */
+
+.conflicto-card {
+  background: white;
+  border-radius: var(--border-radius);
+  box-shadow: var(--box-shadow);
+  overflow: hidden;
+  transition: transform 0.3s, box-shadow 0.3s;
+  animation: slideIn 0.3s ease-out;
+}
+
+@keyframes slideIn {
+  from {
+    opacity: 0;
+    transform: translateY(10px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+.conflicto-card:hover {
+  transform: translateY(-5px);
+  box-shadow: 0 4px 12px rgba(0, 0, 0, 0.15);
+}
+
+.card-header {
+  padding: 20px;
+  background: linear-gradient(135deg, var(--primary-color), var(--secondary-color));
+  color: white;
+  display: flex;
+  justify-content: space-between;
+  align-items: start;
+}
+
+.card-header h3 {
+  margin: 0;
+  font-size: 18px;
+  flex: 1;
+  word-break: break-word;
+}
+
+.prioridad {
+  padding: 4px 12px;
+  border-radius: 20px;
+  font-size: 12px;
+  font-weight: bold;
+  white-space: nowrap;
+  margin-left: 10px;
+}
+
+.prioridad.baja {
+  background-color: rgba(255, 255, 255, 0.3);
+  color: white;
+}
+
+.prioridad.baja-media {
+  background-color: rgba(255, 255, 255, 0.4);
+  color: white;
+}
+
+.prioridad.media {
+  background-color: rgba(255, 255, 255, 0.5);
+  color: white;
+}
+
+.prioridad.alta-media {
+  background-color: rgba(255, 255, 255, 0.6);
+  color: white;
+}
+
+.prioridad.alta {
+  background-color: rgba(255, 255, 255, 0.8);
+  color: #ef4444;
+  font-weight: bold;
+}
+
+.card-body {
+  padding: 20px;
+}
+
+.descripcion {
+  color: #6b7280;
+  line-height: 1.6;
+  margin-bottom: 20px;
+  font-size: 14px;
+}
+
+.detalles {
+  display: grid;
+  grid-template-columns: repeat(auto-fit, minmax(200px, 1fr));
+  gap: 15px;
+  margin-bottom: 20px;
+}
+
+.detalle {
+  display: flex;
+  flex-direction: column;
+}
+
+.detalle label {
+  font-size: 12px;
+  color: #9ca3af;
+  font-weight: 600;
+  text-transform: uppercase;
+  margin-bottom: 4px;
+}
+
+.detalle span {
+  font-size: 14px;
+  color: var(--dark);
+}
+
+.estado {
+  background-color: #dbeafe;
+  color: #0369a1;
+  padding: 4px 12px;
+  border-radius: 4px;
+  width: fit-content;
+  font-weight: 500;
+}
+
+.observaciones {
+  background-color: #f3f4f6;
+  padding: 15px;
+  border-radius: var(--border-radius);
+  border-left: 4px solid var(--warning-color);
+  margin-bottom: 20px;
+}
+
+.observaciones label {
+  font-size: 12px;
+  color: #6b7280;
+  font-weight: 600;
+  text-transform: uppercase;
+  display: block;
+  margin-bottom: 8px;
+}
+
+.observaciones p {
+  font-size: 14px;
+  color: var(--dark);
+  line-height: 1.6;
+  margin: 0;
+}
+
+.card-footer {
+  padding: 15px 20px;
+  background-color: #f9fafb;
+  border-top: 1px solid #e5e7eb;
+  display: flex;
+  gap: 10px;
+}
+
+.card-footer .btn {
+  flex: 1;
+  font-size: 13px;
+}
+
+/* Grid de conflictos */
+.conflictos-grid {
+  display: grid;
+  grid-template-columns: repeat(auto-fill, minmax(300px, 1fr));
+  gap: 20px;
+}
+
+/* Página de conflictos */
+.conflictos-page h1 {
+  font-size: 32px;
+  margin-bottom: 30px;
+  color: var(--dark);
+}
+
+.filtros {
+  margin-bottom: 30px;
+  display: flex;
+  gap: 15px;
+  flex-wrap: wrap;
+}
+
+.filtro-select {
+  padding: 10px 15px;
+  border: 1px solid #e5e7eb;
+  border-radius: var(--border-radius);
+  font-size: 14px;
+  background-color: white;
+  cursor: pointer;
+  transition: border-color 0.3s;
+}
+
+.filtro-select:focus {
+  outline: none;
+  border-color: var(--primary-color);
+  box-shadow: 0 0 0 3px rgba(37, 99, 235, 0.1);
+}
+
+@media (max-width: 768px) {
+  .conflicto-card {
+    margin-bottom: 15px;
+  }
+
+  .card-header {
+    flex-direction: column;
+  }
+
+  .prioridad {
+    margin-left: 0;
+    margin-top: 10px;
+  }
+
+  .card-footer {
+    flex-direction: column;
+  }
+
+  .card-footer .btn {
+    width: 100%;
+  }
+
+  .conflictos-grid {
+    grid-template-columns: 1fr;
+  }
+
+  .detalles {
+    grid-template-columns: 1fr;
+  }
+}
