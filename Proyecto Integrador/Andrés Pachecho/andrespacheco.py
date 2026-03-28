@@ -6,6 +6,14 @@ import csv
 from datetime import datetime, timedelta
 
 
+# Simulación de datos - Tabla Mediacion
+
+import random
+import json
+import csv
+from datetime import datetime, timedelta
+
+
 def generar_mediaciones(numeroRegistros):
 
     tiposMediacion = ["Familiar", "Laboral", "Civil", "Penal"]
@@ -34,13 +42,13 @@ def generar_mediaciones(numeroRegistros):
     return mediaciones
 
 
-# -------- EXPORTAR A JSON --------
+# -------- GUARDAR JSON --------
 def guardar_json(datos, nombreArchivo):
     with open(nombreArchivo, "w", encoding="utf-8") as f:
         json.dump(datos, f, indent=4)
 
 
-# -------- EXPORTAR A CSV --------
+# -------- GUARDAR CSV --------
 def guardar_csv(datos, nombreArchivo):
 
     if len(datos) == 0:
@@ -63,13 +71,16 @@ def cargar_json(nombreArchivo):
 # -------- PROGRAMA PRINCIPAL --------
 if __name__ == "__main__":
 
+    # Generar 1000 registros
     datos = generar_mediaciones(1000)
 
+    # Exportar archivos
     guardar_json(datos, "mediaciones.json")
     guardar_csv(datos, "mediaciones.csv")
 
-    # Prueba de recarga
+    # Recargar datos
     datos_recargados = cargar_json("mediaciones.json")
 
+    # Validación
     print("Registros generados:", len(datos))
     print("Registros recargados:", len(datos_recargados))
