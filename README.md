@@ -56,7 +56,7 @@ Proyecto Integrador/
 ├── Andrés Pachecho/
 │   └── andrespacheco.py
 ├── Andrés Torres/
-│   └── andrestorres.py
+│   └── HU 8.Simulación y exportación (EstadoConflicto)
 ├── Franklin Chaverra/
 │   └── franklinchaverra.py
 ├── Ivan Molina/
