@@ -1,0 +1,22 @@
+import pandas as pd 
+
+#importar simulaciones
+from utils.HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
+
+#importar limpiezas
+from notebook.HU_6_Limpieza_EstadoConflicto import limpiar_estadosConflictos
+
+#importar descripciones
+from notebook.HU_7_Descripción_exploratoria_EstadoConflicto import descripcion_estado_conflicto
+
+#crear simulaciones
+simulacion_EstadoConflicto=generar_estadoConflictos(1000)
+
+#ordenar simulaciones
+simulacion_EstadoConflicto_ordenada=pd.data_frame(simulacion_EstadoConflicto)
+
+#limpiando los sets de datos
+simulacion_EstadoConflicto_limpia=limpiar_estadosConflictos(simulacion_EstadoConflicto_ordenada)
+
+#describiendo los datos
+descripcion_estado_conflicto(simulacion_EstadoConflicto_limpia)
