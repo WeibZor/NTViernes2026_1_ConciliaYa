@@ -44,6 +44,13 @@ from tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
 # importar agrupaciones TipoConflicto
 from tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
 
+# importar Conflicto
+from conflicto.conflicto_data import generar_datos_conflicto
+from conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+
 #importar simulaciones del perfil
 from utils.simulacionperfil import generarPerfil
 
@@ -121,17 +128,35 @@ consultas_tipoconflicto_resultado = consultas_tipos_conflicto(tipoconflicto_limp
 # agrupaciones TipoConflicto
 agrupaciones_tipoconflicto_resultado = agrupaciones_tipos_conflicto(tipoconflicto_limpio)
 
+# crear simulación Conflicto
+conflicto_original = generar_datos_conflicto(num_registros=1000, semilla=42)
+
+# limpiar Conflicto
+conflicto_limpio = limpiar_conflictos(conflicto_original)
+
+# describir Conflicto
+descripcion_conflictos(conflicto_limpio)
+
+# consultas Conflicto
+consultas_conflicto_resultado = consultas_conflicto(conflicto_limpio)
+
+# agrupaciones Conflicto
+agrupaciones_conflicto_resultado = agrupaciones_conflicto(conflicto_limpio)
+
 
 
 
 
 
 # resultados finales
-print("\nFlujo completo ejecutado: EstadoConflicto + Usuario + TipoConflicto")
+print("\nFlujo completo ejecutado: EstadoConflicto + Usuario + TipoConflicto + Conflicto")
 print(f"EstadoConflicto limpio: {len(simulacion_EstadoConflicto_limpia)} registros")
 print(f"Usuario limpio: {len(usuario_limpio)} registros")
 print(f"TipoConflicto limpio: {len(tipoconflicto_limpio)} registros")
+print(f"Conflicto limpio: {len(conflicto_limpio)} registros")
 print(f"Consultas generadas: {list(consultas_resultado.keys())}")
 print(f"Agrupaciones generadas: {list(agrupaciones_resultado.keys())}")
 print(f"Consultas TipoConflicto generadas: {list(consultas_tipoconflicto_resultado.keys())}")
 print(f"Agrupaciones TipoConflicto generadas: {list(agrupaciones_tipoconflicto_resultado.keys())}")
+print(f"Consultas Conflicto generadas: {list(consultas_conflicto_resultado.keys())}")
+print(f"Agrupaciones Conflicto generadas: {list(agrupaciones_conflicto_resultado.keys())}")
