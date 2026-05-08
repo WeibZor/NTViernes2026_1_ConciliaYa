@@ -30,6 +30,7 @@ const Sidebar = ({ isOpen, setIsOpen }) => {
     { path: '/estados-conflicto', icon: FileText, label: 'Estados de Conflicto', color: 'text-red-500' },
     { path: '/conflictos', icon: AlertTriangle, label: 'Conflictos', color: 'text-yellow-500' },
     { path: '/mediaciones', icon: MessageSquare, label: 'Mediaciones', color: 'text-indigo-500' },
+    { path: '/integracion', icon: Sparkles, label: 'Demo Integración', color: 'text-cyan-500' },
     { path: '/feed', icon: MessageSquare, label: 'Feed Social', color: 'text-pink-500' },
     { path: '/estadisticas', icon: BarChart3, label: 'Estadísticas', color: 'text-cyan-500' },
     { path: '/actividad', icon: Activity, label: 'Actividad', color: 'text-emerald-500' },

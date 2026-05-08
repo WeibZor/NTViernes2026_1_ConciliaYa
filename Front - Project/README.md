@@ -20,6 +20,7 @@ Soporta tipos de documento típicos como `CC`, `TI`, `Pasaporte`, `NIT` y `CE`.
 - `/login` - Login de usuario.
 - `/register` - Registro de usuario.
 - `/dashboard` - Área privada con información del usuario y navegación.
+- `/integracion` - Demo de integración frontend/backend con tablas, operaciones y código Python.
 - `/expenses` - Ruta privada de gastos.
 - `*` - Página 404.
 

@@ -8,10 +8,11 @@ import Register from './pages/Register';
 import Dashboard from './pages/Dashboard';
 import Usuarios from './pages/Usuarios';
 import Perfiles from './pages/Perfiles';
-import TiposConflicto from './pages/TiposConflicto';
+import TiposConflicto from './pages/TipoConflicto';
 import EstadosConflicto from './pages/EstadosConflicto';
 import Conflictos from './pages/Conflictos';
 import Mediaciones from './pages/Mediaciones';
+import Demo from './pages/Demo';
 import Feed from './pages/Feed';
 import Estadisticas from './pages/Estadisticas';
 import Actividad from './pages/Actividad';
@@ -44,6 +45,7 @@ function App() {
           <Route path="estados-conflicto" element={<EstadosConflicto />} />
           <Route path="conflictos" element={<Conflictos />} />
           <Route path="mediaciones" element={<Mediaciones />} />
+          <Route path="integracion" element={<Demo />} />
           <Route path="feed" element={<Feed />} />
           <Route path="estadisticas" element={<Estadisticas />} />
           <Route path="actividad" element={<Actividad />} />
