@@ -46,3 +46,5 @@ npm run dev
 - Los datos de usuario y gastos se centralizan en `src/services/`.
 - Los formularios son controlados con `useState`.
 - La sesión se persiste en `localStorage` para simular autenticación.
+- Esta versión puede integrarse con el backend Python de `Proyecto Integrador` usando `Front - Project/.env`.
+- Si `localhost:8000/api` está disponible, las consultas de usuario se servirán desde la API.

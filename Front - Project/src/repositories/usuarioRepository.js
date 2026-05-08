@@ -1,80 +1,165 @@
-import db from '../database/localDatabase.js';
+﻿import db from '../database/localDatabase.js';
 import UsuarioModel from '../database/models/UsuarioModel.js';
+import api from '../api/apiClient.js';
+
+const USE_BACKEND = true;
+
+async function backendOrFallback(backendFn, fallbackFn) {
+  if (!USE_BACKEND) return await fallbackFn();
+
+  try {
+    return await backendFn();
+  } catch (error) {
+    console.warn('Backend API no disponible, usando fallback local:', error.message || error);
+    return await fallbackFn();
+  }
+}
 
 class UsuarioRepository {
   async getAll() {
-    await this.simulateDelay();
-    return db.getCollection('usuarios');
+    return backendOrFallback(
+      async () => {
+        const response = await api.get('/usuarios');
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        return db.getCollection('usuarios');
+      }
+    );
   }
 
   async getById(id) {
-    await this.simulateDelay();
-    const usuarios = db.getCollection('usuarios');
-    return usuarios.find(u => u.id === id) || null;
+    return backendOrFallback(
+      async () => {
+        const response = await api.get('/usuarios/filter', { params: { id } });
+        return response.data.find(user => user.id === id) || null;
+      },
+      async () => {
+        await this.simulateDelay();
+        const usuarios = db.getCollection('usuarios');
+        return usuarios.find(u => u.id === id) || null;
+      }
+    );
   }
 
   async create(data) {
-    await this.simulateDelay();
-    const validatedData = UsuarioModel.validate(data);
-    const normalizedData = UsuarioModel.normalize(validatedData);
-    return db.addToCollection('usuarios', normalizedData);
+    return backendOrFallback(
+      async () => {
+        const response = await api.post('/usuarios', data);
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        const validatedData = UsuarioModel.validate(data);
+        const normalizedData = UsuarioModel.normalize(validatedData);
+        return db.addToCollection('usuarios', normalizedData);
+      }
+    );
   }
 
   async update(id, data) {
-    await this.simulateDelay();
-    const validatedData = UsuarioModel.validate(data);
-    return db.updateInCollection('usuarios', id, validatedData);
+    return backendOrFallback(
+      async () => {
+        const response = await api.put(`/usuarios/${id}`, data);
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        const validatedData = UsuarioModel.validate(data);
+        return db.updateInCollection('usuarios', id, validatedData);
+      }
+    );
   }
 
   async delete(id) {
-    await this.simulateDelay();
-    return db.removeFromCollection('usuarios', id);
+    return backendOrFallback(
+      async () => {
+        const response = await api.delete(`/usuarios/${id}`);
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        return db.removeFromCollection('usuarios', id);
+      }
+    );
   }
 
   async search(query) {
-    await this.simulateDelay();
-    const usuarios = db.getCollection('usuarios');
-    const lowerQuery = query.toLowerCase();
-    return usuarios.filter(u =>
-      u.nombre.toLowerCase().includes(lowerQuery) ||
-      u.apellido.toLowerCase().includes(lowerQuery) ||
-      u.correo.toLowerCase().includes(lowerQuery)
+    return backendOrFallback(
+      async () => {
+        const response = await api.get('/usuarios/filter', { params: { search: query } });
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        const usuarios = db.getCollection('usuarios');
+        const lowerQuery = query.toLowerCase();
+        return usuarios.filter(u =>
+          u.nombre.toLowerCase().includes(lowerQuery) ||
+          u.apellido.toLowerCase().includes(lowerQuery) ||
+          u.correo.toLowerCase().includes(lowerQuery)
+        );
+      }
     );
   }
 
   async paginate(page = 1, limit = 10) {
-    await this.simulateDelay();
-    const usuarios = db.getCollection('usuarios');
-    const start = (page - 1) * limit;
-    const end = start + limit;
-    return {
-      data: usuarios.slice(start, end),
-      total: usuarios.length,
-      page,
-      limit,
-      totalPages: Math.ceil(usuarios.length / limit)
-    };
+    return backendOrFallback(
+      async () => {
+        const response = await api.get('/usuarios', { params: { page, limit } });
+        const data = response.data;
+        return {
+          data: data.slice((page - 1) * limit, page * limit),
+          total: data.length,
+          page,
+          limit,
+          totalPages: Math.ceil(data.length / limit),
+        };
+      },
+      async () => {
+        await this.simulateDelay();
+        const usuarios = db.getCollection('usuarios');
+        const start = (page - 1) * limit;
+        const end = start + limit;
+        return {
+          data: usuarios.slice(start, end),
+          total: usuarios.length,
+          page,
+          limit,
+          totalPages: Math.ceil(usuarios.length / limit),
+        };
+      }
+    );
   }
 
   async filter(filters) {
-    await this.simulateDelay();
-    let usuarios = db.getCollection('usuarios');
+    return backendOrFallback(
+      async () => {
+        const response = await api.get('/usuarios/filter', { params: filters });
+        return response.data;
+      },
+      async () => {
+        await this.simulateDelay();
+        let usuarios = db.getCollection('usuarios');
 
-    if (filters.perfilId) {
-      usuarios = usuarios.filter(u => u.perfilId === filters.perfilId);
-    }
-    if (filters.activo !== undefined) {
-      usuarios = usuarios.filter(u => u.activo === filters.activo);
-    }
-    if (filters.search) {
-      const lowerSearch = filters.search.toLowerCase();
-      usuarios = usuarios.filter(u =>
-        u.nombre.toLowerCase().includes(lowerSearch) ||
-        u.apellido.toLowerCase().includes(lowerSearch)
-      );
-    }
+        if (filters.perfilId) {
+          usuarios = usuarios.filter(u => u.perfilId === filters.perfilId);
+        }
+        if (filters.activo !== undefined) {
+          usuarios = usuarios.filter(u => u.activo === filters.activo);
+        }
+        if (filters.search) {
+          const lowerSearch = filters.search.toLowerCase();
+          usuarios = usuarios.filter(u =>
+            u.nombre.toLowerCase().includes(lowerSearch) ||
+            u.apellido.toLowerCase().includes(lowerSearch)
+          );
+        }
 
-    return usuarios;
+        return usuarios;
+      }
+    );
   }
 
   async simulateDelay() {
