@@ -32,7 +32,6 @@ from usuario.HU_29_Query_Usuario import consultas_usuario
 from usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
 from usuario.usuario_data import generar_datos_usuario
 
-# Configuración de FastAPI
 app = FastAPI(
     title="ConciliaYa Data API",
     version="1.0.0",
@@ -100,6 +99,91 @@ def ejecutar_procesamiento_completo():
     print(f"Agrupaciones Perfil generadas: {list(agrupaciones_resultado_perfil.keys())}")
 
 
+perfiles = generarPerfil(1000)
+
+perfiles_ordenados=pd.DataFrame(perfiles)
+
+simulaciones_perfil_limpias=limpiar_perfil(perfiles_ordenados)
+print(simulaciones_perfil_limpias)
+
+# describir Perfil
+descripcion_perfil(simulaciones_perfil_limpias)
+
+# consultas Perfil
+consultas_resultado_perfil = consultas_perfil(simulaciones_perfil_limpias)
+
+# agrupaciones Perfil
+agrupaciones_resultado_perfil = agrupaciones_perfil(simulaciones_perfil_limpias)
+
+
+# crear simulaciones EstadoConflicto
+simulacion_EstadoConflicto = generar_estadoConflictos(1000)
+
+# ordenar simulaciones EstadoConflicto
+simulacion_EstadoConflicto_ordenada = pd.DataFrame(simulacion_EstadoConflicto)
+
+# limpiando los sets de datos EstadoConflicto
+simulacion_EstadoConflicto_limpia = limpiar_estadosConflictos(simulacion_EstadoConflicto_ordenada)
+
+# describiendo los datos EstadoConflicto
+descripcion_estado_conflicto(simulacion_EstadoConflicto_limpia)
+
+
+# crear simulación Usuario
+usuario_original = simular_y_exportar_usuarios(num_registros=1000, semilla=42)
+
+# recargar y validar Usuario
+recargar_y_validar_usuarios(usuario_original)
+
+# limpiar Usuario
+usuario_limpio = limpiar_usuarios(usuario_original)
+
+# describir Usuario
+descripcion_usuarios(usuario_limpio)
+
+# consultas Usuario
+consultas_resultado = consultas_usuario(usuario_limpio)
+
+# agrupaciones Usuario
+agrupaciones_resultado = agrupaciones_usuario(usuario_limpio)
+
+
+# crear simulación TipoConflicto
+tipoconflicto_original = simular_y_exportar_tipos_conflicto(num_registros=1000, semilla=42)
+
+# recargar y validar TipoConflicto
+recargar_y_validar_tipos_conflicto(tipoconflicto_original)
+
+# limpiar TipoConflicto
+tipoconflicto_limpio = limpiar_tipos_conflicto(tipoconflicto_original)
+
+# describir TipoConflicto
+descripcion_tipos_conflicto(tipoconflicto_limpio)
+
+# consultas TipoConflicto
+consultas_tipoconflicto_resultado = consultas_tipos_conflicto(tipoconflicto_limpio)
+
+# agrupaciones TipoConflicto
+agrupaciones_tipoconflicto_resultado = agrupaciones_tipos_conflicto(tipoconflicto_limpio)
+
+
+
+
+
+
+# resultados finales
+print("\nFlujo completo ejecutado: EstadoConflicto + Usuario + TipoConflicto + Perfil")
+print(f"EstadoConflicto limpio: {len(simulacion_EstadoConflicto_limpia)} registros")
+print(f"Usuario limpio: {len(usuario_limpio)} registros")
+print(f"TipoConflicto limpio: {len(tipoconflicto_limpio)} registros")
+print(f"Perfil limpio: {len(simulaciones_perfil_limpias)} registros")
+print(f"Consultas generadas: {list(consultas_resultado.keys())}")
+print(f"Agrupaciones generadas: {list(agrupaciones_resultado.keys())}")
+print(f"Consultas TipoConflicto generadas: {list(consultas_tipoconflicto_resultado.keys())}")
+print(f"Agrupaciones TipoConflicto generadas: {list(agrupaciones_tipoconflicto_resultado.keys())}")
+print(f"Consultas Perfil generadas: {list(consultas_resultado_perfil.keys())}")
+print(f"Agrupaciones Perfil generadas: {list(agrupaciones_resultado_perfil.keys())}")
+
 # Endpoints de la API
 
 @app.get("/perfil/simular")
@@ -138,7 +222,5 @@ def agrupaciones_perfil_endpoint(num_registros: int = 100):
     agrup = agrupaciones_perfil(df_limpio)
     return {k: v.to_dict(orient="records") for k, v in agrup.items()}
 
-
 if __name__ == "__main__":
-    ejecutar_procesamiento_completo()
     uvicorn.run(app, host="0.0.0.0", port=8000)

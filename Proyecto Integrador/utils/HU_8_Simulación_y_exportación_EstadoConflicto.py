@@ -26,7 +26,7 @@ def generar_estadoConflictos(num_estadoConflictos):
         elif(probabilidadError<0.4):
             estadoConflicto["nombre"]=rd.choice(["MedioCerrado","MedioAbierto"])
         elif(probabilidadError<0.5):
-            estadoConflicto=rd.choice([1,1000,2])
+            estadoConflicto["id"]=rd.choice([1,1000,2])
         elif(probabilidadError<0.8):
             estadoConflicto["descripcion"]=" "+estadoConflicto["descripcion"].upper()
             
