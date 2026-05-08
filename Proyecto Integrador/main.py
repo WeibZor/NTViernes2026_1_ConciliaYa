@@ -24,6 +24,20 @@ from usuario.HU_29_Query_Usuario import consultas_usuario
 # importar agrupaciones Usuario
 from usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
 
+#importar simulaciones del perfil
+from utils.simulacionperfil import generarPerfil
+
+#importar rutina de limpieza del prefil
+from notebook.HU16_limpiezaperfil import limpiar_perfil
+
+
+perfiles = generarPerfil(1000)
+
+perfiles_ordenados=pd.DataFrame(perfiles)
+
+simulaciones_perfil_limpias=limpiar_perfil(perfiles_ordenados)
+print(simulaciones_perfil_limpias)
+
 
 # crear simulaciones EstadoConflicto
 simulacion_EstadoConflicto = generar_estadoConflictos(1000)
@@ -55,6 +69,10 @@ consultas_resultado = consultas_usuario(usuario_limpio)
 
 # agrupaciones Usuario
 agrupaciones_resultado = agrupaciones_usuario(usuario_limpio)
+
+
+
+
 
 
 # resultados finales
