@@ -56,6 +56,7 @@ El frontend estará disponible en: `http://localhost:5173` (o el puerto que indi
 - `requirements.txt`: dependencias Python necesarias.
 - `usuario/`: módulos con generación, limpieza y análisis de datos de Usuario.
 - `tipoconflicto/`: módulos con generación, limpieza y análisis de datos de TipoConflicto.
+- `conflicto/`: módulos con generación, limpieza y análisis de datos de Conflicto.
 
 ## Endpoints disponibles
 
@@ -84,6 +85,22 @@ El frontend estará disponible en: `http://localhost:5173` (o el puerto que indi
 - `POST /api/tipoconflictos` — crea un nuevo tipo de conflicto
 - `PUT /api/tipoconflictos/{tipo_id}` — actualiza tipo de conflicto
 - `DELETE /api/tipoconflictos/{tipo_id}` — elimina tipo de conflicto
+
+### Conflicto
+- `GET /api/conflictos/raw` — dataset Conflicto sintético original
+- `GET /api/conflictos` — dataset Conflicto limpio
+- `GET /api/conflictos/filter` — filtrado por `search`, `activo`, `tipoConflicto`, `estado`, `id`
+- `GET /api/conflictos/head-tail` — muestras `head` y `tail`
+- `GET /api/conflictos/summary` — resumen estructural del dataset
+- `GET /api/conflictos/queries` — resultados de las consultas con `query()`
+- `GET /api/conflictos/groupings` — agrupaciones por estado y tipo de conflicto
+- `GET /api/conflictos/queries/{query_type}` — consulta específica devuelta por nombre de query
+- `GET /api/conflictos/groupings/{group_type}` — agrupación específica devuelta por nombre de grupo
+- `POST /api/conflictos/simulate` — simula datos (parámetro `num_registros`)
+- `POST /api/conflictos/clean` — ejecuta limpieza de datos
+- `POST /api/conflictos` — crea un nuevo conflicto
+- `PUT /api/conflictos/{conflicto_id}` — actualiza conflicto
+- `DELETE /api/conflictos/{conflicto_id}` — elimina conflicto
 
 ## Integración con el frontend
 
