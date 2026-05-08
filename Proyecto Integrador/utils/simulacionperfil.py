@@ -1,17 +1,19 @@
+
+#08/05/2026 se hizo cambio en las mayusculas de la listaNombre Y la ListaDescripcion, tambien se añadieron los ERRORES controlados.
+
 import random
 from datetime import datetime, timedelta
 def generarPerfil(numeroPerfiles):
 
 
-    listaNombre =["Administrador", "Gestor", "Usuario", "Administrador", "Gestor", "Usuario", 
-                  "Administrador", "Gestor", "Usuario", "Administrador"]
+    listaNombre =["administrador", "gestor", "usuario"]
 
 
-    listaDescripcion =["Acceso total al sistema", "Acceso limitado a ciertas funciones",
-                        "Acceso restringido a datos sensibles", "Acceso a reportes y estadísticas"
-                        , "Acceso a configuraciones del sistema", "Acceso a herramientas de administración"
-                        , "Acceso a recursos compartidos", "Acceso a información de contacto", 
-                        "Acceso a documentos internos", "Acceso a foros y discusiones"]
+    listaDescripcion =["acceso total al sistema","acceso limitado a ciertas funciones",
+                       "acceso restringido a datos sensibles", "acceso a reportes y estadísticas",
+                       "acceso a configuraciones del sistema","acceso a herramientas de administración",
+                       "acceso a recursos compartidos","acceso a información de contacto",
+                       "acceso a documentos internos","acceso a foros y discusiones"]
 
     listaBoolean = [True, False]
 
@@ -31,6 +33,27 @@ def generarPerfil(numeroPerfiles):
             "descripcion": random.choice(listaDescripcion),
             "activo": random.choice(listaBoolean),
             "fecha": fecha.strftime("%Y-%m-%d")
-        }    
+        }
+
+
+
+        #ERRORES CONTROLADOS
+        probabilidadError=random.random()
+
+        if probabilidadError < 0.1:
+            perfil["id"]= random.choice([0,-1,None])
+            perfil["activo"]=None
+        elif probabilidadError < 0.3:
+            perfil["descripcion"]= random.choice(["no hay acceso","no tienes permiso", "no te dejo entrar"])
+            perfil["descripcion"]=" " + perfil["descripcion"]+" "
+        elif probabilidadError < 0.6:
+            perfil["descripcion"]= None
+            perfil["nombre"]= random.choice(["samuel", "tomas", "no hay nombre", None])
+        elif probabilidadError < 0.9:
+            perfil["fecha"]=None
+         
+         
+         
+        
         perfiles.append(perfil)
     return perfiles
