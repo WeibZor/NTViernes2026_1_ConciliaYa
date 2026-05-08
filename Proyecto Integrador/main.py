@@ -32,11 +32,18 @@ from usuario.HU_29_Query_Usuario import consultas_usuario
 from usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
 from usuario.usuario_data import generar_datos_usuario
 
+# Importaciones de módulos de Conflicto
+from conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+from conflicto.conflicto_data import generar_datos_conflicto
+
 # Configuración de FastAPI
 app = FastAPI(
     title="ConciliaYa Data API",
     version="1.0.0",
-    description="API para integrar la lógica de limpieza, exploración, simulación y análisis de Usuario, EstadoConflicto y Perfil con el frontend React."
+    description="API para integrar la lógica de limpieza, exploración, simulación y análisis de Usuario, EstadoConflicto, Perfil y Conflicto con el frontend React."
 )
 
 app.add_middleware(
@@ -64,6 +71,13 @@ def ejecutar_procesamiento_completo():
     # agrupaciones Perfil
     agrupaciones_resultado_perfil = agrupaciones_perfil(simulaciones_perfil_limpias)
 
+    # Procesamiento de Conflicto
+    conflicto_original = generar_datos_conflicto(num_registros=1000)
+    conflicto_limpio = limpiar_conflictos(conflicto_original)
+    descripcion_conflictos(conflicto_limpio)
+    consultas_resultado_conflicto = consultas_conflicto(conflicto_limpio)
+    agrupaciones_resultado_conflicto = agrupaciones_conflicto(conflicto_limpio)
+
     # Procesamiento de EstadoConflicto
     simulacion_EstadoConflicto = generar_estadoConflictos(1000)
     simulacion_EstadoConflicto_ordenada = pd.DataFrame(simulacion_EstadoConflicto)
@@ -87,17 +101,20 @@ def ejecutar_procesamiento_completo():
     agrupaciones_tipoconflicto_resultado = agrupaciones_tipos_conflicto(tipoconflicto_limpio)
 
     # Resultados finales
-    print("\nFlujo completo ejecutado: EstadoConflicto + Usuario + TipoConflicto + Perfil")
+    print("\nFlujo completo ejecutado: EstadoConflicto + Usuario + TipoConflicto + Perfil + Conflicto")
     print(f"EstadoConflicto limpio: {len(simulacion_EstadoConflicto_limpia)} registros")
     print(f"Usuario limpio: {len(usuario_limpio)} registros")
     print(f"TipoConflicto limpio: {len(tipoconflicto_limpio)} registros")
     print(f"Perfil limpio: {len(simulaciones_perfil_limpias)} registros")
+    print(f"Conflicto limpio: {len(conflicto_limpio)} registros")
     print(f"Consultas generadas: {list(consultas_resultado.keys())}")
     print(f"Agrupaciones generadas: {list(agrupaciones_resultado.keys())}")
     print(f"Consultas TipoConflicto generadas: {list(consultas_tipoconflicto_resultado.keys())}")
     print(f"Agrupaciones TipoConflicto generadas: {list(agrupaciones_tipoconflicto_resultado.keys())}")
     print(f"Consultas Perfil generadas: {list(consultas_resultado_perfil.keys())}")
     print(f"Agrupaciones Perfil generadas: {list(agrupaciones_resultado_perfil.keys())}")
+    print(f"Consultas Conflicto generadas: {list(consultas_resultado_conflicto.keys())}")
+    print(f"Agrupaciones Conflicto generadas: {list(agrupaciones_resultado_conflicto.keys())}")
 
 
 # Endpoints de la API
@@ -136,6 +153,39 @@ def agrupaciones_perfil_endpoint(num_registros: int = 100):
     df = pd.DataFrame(perfiles)
     df_limpio = limpiar_perfil(df)
     agrup = agrupaciones_perfil(df_limpio)
+    return {k: v.to_dict(orient="records") for k, v in agrup.items()}
+
+
+@app.get("/conflicto/simular")
+def simular_conflicto(num_registros: int = 100):
+    conflictos = generar_datos_conflicto(num_registros=num_registros)
+    return {"conflictos": conflictos.to_dict(orient="records")}
+
+@app.get("/conflicto/limpiar")
+def limpiar_conflicto_endpoint(num_registros: int = 100):
+    conflictos = generar_datos_conflicto(num_registros=num_registros)
+    df_limpio = limpiar_conflictos(conflictos)
+    return df_limpio.to_dict(orient="records")
+
+@app.get("/conflicto/descripcion")
+def descripcion_conflicto_endpoint(num_registros: int = 100):
+    conflictos = generar_datos_conflicto(num_registros=num_registros)
+    df_limpio = limpiar_conflictos(conflictos)
+    desc = descripcion_conflictos(df_limpio)
+    return desc
+
+@app.get("/conflicto/consultas")
+def consultas_conflicto_endpoint(num_registros: int = 100):
+    conflictos = generar_datos_conflicto(num_registros=num_registros)
+    df_limpio = limpiar_conflictos(conflictos)
+    consultas = consultas_conflicto(df_limpio)
+    return {k: v.to_dict(orient="records") for k, v in consultas.items()}
+
+@app.get("/conflicto/agrupaciones")
+def agrupaciones_conflicto_endpoint(num_registros: int = 100):
+    conflictos = generar_datos_conflicto(num_registros=num_registros)
+    df_limpio = limpiar_conflictos(conflictos)
+    agrup = agrupaciones_conflicto(df_limpio)
     return {k: v.to_dict(orient="records") for k, v in agrup.items()}
 
 

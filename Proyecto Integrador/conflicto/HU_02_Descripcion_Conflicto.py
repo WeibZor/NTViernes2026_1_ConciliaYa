@@ -31,12 +31,10 @@ def descripcion_conflictos(df):
     print("- De fecha/tiempo:", fechas)
 
     return {
-        "head": df.head(),
-        "tail": df.tail(),
-        "info": df.info(),
-        "describe": df.describe(include="all"),
         "columnas": columnas,
         "categoricas": categoricas,
         "numericas": numericas,
         "fechas": fechas,
+        "filas": df.shape[0],
+        "columnas_count": df.shape[1],
     }
