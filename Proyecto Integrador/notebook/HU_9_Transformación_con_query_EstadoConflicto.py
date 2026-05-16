@@ -1,6 +1,6 @@
 import pandas as pd
 
-def transformar_datos_servicio(data_frame_limpio):
+def transformar_datos_estadoConflicto(data_frame_limpio):
     # Asegurar que los nombres de las columnas no tengan espacios en blanco
     df = data_frame_limpio.copy()
     
@@ -40,4 +40,8 @@ def transformar_datos_servicio(data_frame_limpio):
     agrupacion_5 = filtro_5.groupby(["nombre", "estado"])["id"].count().reset_index(name="conteo_segmentado")
     
     # Retornamos los dataframes procesados para su posterior graficación
-    return agrupacion_1, agrupacion_2, agrupacion_3, agrupacion_4, agrupacion_5
+    transformacion={
+        "cuenta":agrupacion_1,
+        "porcentaje":agrupacion_2
+    }
+    return transformacion

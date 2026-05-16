@@ -17,6 +17,7 @@ from notebook.HU19_query_perfil import consultas_perfil
 from notebook.HU20_agrupacion_perfil import agrupaciones_perfil
 from utils.simulacionperfil import generarPerfil
 
+
 # Importaciones de módulos de TipoConflicto
 from tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
 from tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
