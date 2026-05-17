@@ -4,23 +4,23 @@ from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
-from concilia.domain.usuario.usuario_data import generar_datos_usuario
-from concilia.domain.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
-from concilia.domain.usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
-from concilia.domain.usuario.HU_29_Query_Usuario import consultas_usuario
-from concilia.domain.usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
+from concilia.domain.entities.usuario.usuario_data import generar_datos_usuario
+from concilia.domain.entities.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
+from concilia.domain.entities.usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
+from concilia.domain.entities.usuario.HU_29_Query_Usuario import consultas_usuario
+from concilia.domain.entities.usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
 
-from concilia.domain.tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
-from concilia.domain.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
+from concilia.domain.entities.tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
+from concilia.domain.entities.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
+from concilia.domain.entities.tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
+from concilia.domain.entities.tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
+from concilia.domain.entities.tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
 
-from concilia.domain.conflicto.conflicto_data import generar_datos_conflicto
-from concilia.domain.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
-from concilia.domain.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
-from concilia.domain.conflicto.HU_04_Query_Conflicto import consultas_conflicto
-from concilia.domain.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+from concilia.domain.entities.conflicto.conflicto_data import generar_datos_conflicto
+from concilia.domain.entities.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from concilia.domain.entities.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from concilia.domain.entities.conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from concilia.domain.entities.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
 
 app = FastAPI(
     title="ConciliaYa Data API",

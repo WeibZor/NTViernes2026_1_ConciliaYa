@@ -3,11 +3,11 @@ import os
 
 sys.path.insert(0, os.getcwd())
 
-from concilia.domain.conflicto.conflicto_data import generar_datos_conflicto
-from concilia.domain.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
-from concilia.domain.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
-from concilia.domain.conflicto.HU_04_Query_Conflicto import consultas_conflicto
-from concilia.domain.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+from concilia.domain.entities.conflicto.conflicto_data import generar_datos_conflicto
+from concilia.domain.entities.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from concilia.domain.entities.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from concilia.domain.entities.conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from concilia.domain.entities.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
 
 
 def main():
