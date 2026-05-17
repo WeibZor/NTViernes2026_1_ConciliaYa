@@ -1,26 +1,26 @@
-﻿from typing import Any, Dict, List, Optional
+from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
 
-from concilia.domain.usuario.usuario_data import generar_datos_usuario
-from concilia.domain.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
-from concilia.domain.usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
-from concilia.domain.usuario.HU_29_Query_Usuario import consultas_usuario
-from concilia.domain.usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
+from usuario.usuario_data import generar_datos_usuario
+from usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
+from usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
+from usuario.HU_29_Query_Usuario import consultas_usuario
+from usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
 
-from concilia.domain.tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
-from concilia.domain.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
+from tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
+from tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
+from tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
+from tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
+from tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
 
-from concilia.domain.conflicto.conflicto_data import generar_datos_conflicto
-from concilia.domain.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
-from concilia.domain.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
-from concilia.domain.conflicto.HU_04_Query_Conflicto import consultas_conflicto
-from concilia.domain.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+from conflicto.conflicto_data import generar_datos_conflicto
+from conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
 
 app = FastAPI(
     title="ConciliaYa Data API",
@@ -396,128 +396,3 @@ def conflictos_head_tail():
         "head": df.head(5).to_dict(orient="records"),
         "tail": df.tail(5).to_dict(orient="records"),
     }
-
-
-@app.get("/api/conflictos/summary")
-def conflictos_summary():
-    df = titlecase_columns(pd.DataFrame(initialize_conflictos()), CONFLICTO_COLUMN_MAP)
-    desc = descripcion_conflictos(df)
-    return {
-        "rows": df.shape[0],
-        "columns": df.shape[1],
-        "column_names": list(df.columns),
-        "categorical_columns": desc["categoricas"],
-        "numeric_columns": desc["numericas"],
-        "sample": {
-            "head": serialize_df(df.head(5), CONFLICTO_COLUMN_MAP),
-            "tail": serialize_df(df.tail(5), CONFLICTO_COLUMN_MAP),
-        },
-    }
-
-
-@app.get("/api/conflictos/queries")
-def conflictos_queries():
-    df = titlecase_columns(pd.DataFrame(initialize_conflictos()), CONFLICTO_COLUMN_MAP)
-    resultados = consultas_conflicto(df)
-    return {key: serialize_df(value, CONFLICTO_COLUMN_MAP) for key, value in resultados.items()}
-
-
-@app.get("/api/conflictos/groupings")
-def conflictos_groupings():
-    df = titlecase_columns(pd.DataFrame(initialize_conflictos()), CONFLICTO_COLUMN_MAP)
-    agrupaciones = agrupaciones_conflicto(df)
-    return {key: serialize_df(value, CONFLICTO_COLUMN_MAP) for key, value in agrupaciones.items()}
-
-
-@app.post("/api/conflictos/simulate")
-def simulate_conflictos(num_registros: int = Body(default=1000, embed=True)):
-    global CONFLICTO_STATE
-    df = limpiar_conflictos(generar_datos_conflicto(num_registros=num_registros, semilla=42))
-    CONFLICTO_STATE = [normalize_keys(record, CONFLICTO_COLUMN_MAP) for record in df.where(pd.notnull(df), None).to_dict(orient="records")]
-    return {"message": f"Simulados {len(CONFLICTO_STATE)} conflictos", "data": CONFLICTO_STATE}
-
-
-@app.post("/api/conflictos/clean")
-def clean_conflictos():
-    global CONFLICTO_STATE
-    df = pd.DataFrame(CONFLICTO_STATE)
-    df_titlecase = titlecase_columns(df, CONFLICTO_COLUMN_MAP)
-    df_clean = limpiar_conflictos(df_titlecase)
-    CONFLICTO_STATE = [normalize_keys(record, CONFLICTO_COLUMN_MAP) for record in df_clean.where(pd.notnull(df_clean), None).to_dict(orient="records")]
-    return {"message": f"Limpieza completada, {len(CONFLICTO_STATE)} registros", "data": CONFLICTO_STATE}
-
-
-@app.get("/api/conflictos/queries/{query_type}")
-def get_conflictos_queries(query_type: str):
-    df = titlecase_columns(pd.DataFrame(initialize_conflictos()), CONFLICTO_COLUMN_MAP)
-    resultados = consultas_conflicto(df)
-    if query_type in resultados:
-        return serialize_df(resultados[query_type], CONFLICTO_COLUMN_MAP)
-    return {"error": "Query type not found"}
-
-
-@app.get("/api/conflictos/groupings/{group_type}")
-def get_conflictos_groupings(group_type: str):
-    df = titlecase_columns(pd.DataFrame(initialize_conflictos()), CONFLICTO_COLUMN_MAP)
-    agrupaciones = agrupaciones_conflicto(df)
-    if group_type in agrupaciones:
-        return serialize_df(agrupaciones[group_type], CONFLICTO_COLUMN_MAP)
-    return {"error": "Group type not found"}
-
-
-@app.post("/api/conflictos")
-def crear_conflicto(payload: Dict[str, Any]):
-    conflictos = initialize_conflictos()
-    next_id = max((c.get("id", 0) for c in conflictos), default=0) + 1
-    nuevo = {**payload, "id": next_id}
-    if "activo" not in nuevo:
-        nuevo["activo"] = True
-    conflictos.append(nuevo)
-    CONFLICTO_STATE[:] = conflictos
-    return nuevo
-
-
-@app.put("/api/conflictos/{conflicto_id}")
-def actualizar_conflicto(conflicto_id: int, payload: Dict[str, Any]):
-    conflictos = initialize_conflictos()
-    conflicto = next((c for c in conflictos if c["id"] == conflicto_id), None)
-    if conflicto is None:
-        raise HTTPException(status_code=404, detail="Conflicto no encontrado")
-
-    conflicto.update(payload)
-    CONFLICTO_STATE[:] = conflictos
-    return conflicto
-
-
-@app.delete("/api/conflictos/{conflicto_id}")
-def eliminar_conflicto(conflicto_id: int):
-    conflictos = initialize_conflictos()
-    conflictos_nuevos = [c for c in conflictos if c["id"] != conflicto_id]
-    if len(conflictos_nuevos) == len(conflictos):
-        raise HTTPException(status_code=404, detail="Conflicto no encontrado")
-
-    CONFLICTO_STATE[:] = conflictos_nuevos
-    return {"message": "Conflicto eliminado"}
-
-
-@app.get("/api/conflictos/filter")
-def conflictos_filter(
-    id: Optional[int] = Query(default=None),
-    activo: Optional[bool] = Query(default=None),
-    tipo_conflicto: Optional[str] = Query(default=None, alias="tipoConflicto"),
-    estado: Optional[str] = Query(default=None),
-    search: Optional[str] = Query(default=None),
-):
-    df = pd.DataFrame(initialize_conflictos())
-    if id is not None:
-        df = df[df["id"] == id]
-    if activo is not None:
-        df = df[df["activo"] == activo]
-    if tipo_conflicto is not None:
-        df = df[df["tipoConflicto"].str.upper() == tipo_conflicto.upper()]
-    if estado is not None:
-        df = df[df["estado"].str.upper() == estado.upper()]
-    if search is not None:
-        pattern = search.lower()
-        df = df[df.apply(lambda row: pattern in str(row["titulo"]).lower() or pattern in str(row["descripcion"]).lower(), axis=1)]
-    return df.to_dict(orient="records")

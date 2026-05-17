@@ -6,39 +6,39 @@ import pandas as pd
 import uvicorn
 
 # Importaciones de módulos de EstadoConflicto
-from concilia.domain.notebook.HU_6_Limpieza_EstadoConflicto import limpiar_estadosConflictos
-from concilia.domain.notebook.HU_7_Descripción_exploratoria_EstadoConflicto import descripcion_estado_conflicto
-from concilia.domain.utils.HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
+from notebook.HU_6_Limpieza_EstadoConflicto import limpiar_estadosConflictos
+from notebook.HU_7_Descripción_exploratoria_EstadoConflicto import descripcion_estado_conflicto
+from utils.HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
 
 # Importaciones de módulos de Perfil
-from concilia.domain.notebook.HU16_limpiezaperfil import limpiar_perfil
-from concilia.domain.notebook.HU17_descripcion_perfil import descripcion_perfil
-from concilia.domain.notebook.HU19_query_perfil import consultas_perfil
-from concilia.domain.notebook.HU20_agrupacion_perfil import agrupaciones_perfil
-from concilia.domain.utils.simulacionperfil import generarPerfil
+from notebook.HU16_limpiezaperfil import limpiar_perfil
+from notebook.HU17_descripcion_perfil import descripcion_perfil
+from notebook.HU19_query_perfil import consultas_perfil
+from notebook.HU20_agrupacion_perfil import agrupaciones_perfil
+from utils.simulacionperfil import generarPerfil
 
 
 # Importaciones de módulos de TipoConflicto
-from concilia.domain.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_23_Simulacion_TipoConflicto import simular_y_exportar_tipos_conflicto, recargar_y_validar_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
-from concilia.domain.tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
+from tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
+from tipoconflicto.HU_22_Descripcion_TipoConflicto import descripcion_tipos_conflicto
+from tipoconflicto.HU_23_Simulacion_TipoConflicto import simular_y_exportar_tipos_conflicto, recargar_y_validar_tipos_conflicto
+from tipoconflicto.HU_24_Query_TipoConflicto import consultas_tipos_conflicto
+from tipoconflicto.HU_25_Agrupacion_TipoConflicto import agrupaciones_tipos_conflicto
 
 # Importaciones de módulos de Usuario
-from concilia.domain.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
-from concilia.domain.usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
-from concilia.domain.usuario.HU_28_Simulacion_Usuario import simular_y_exportar_usuarios, recargar_y_validar_usuarios
-from concilia.domain.usuario.HU_29_Query_Usuario import consultas_usuario
-from concilia.domain.usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
-from concilia.domain.usuario.usuario_data import generar_datos_usuario
+from usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
+from usuario.HU_27_Descripcion_Usuario import descripcion_usuarios
+from usuario.HU_28_Simulacion_Usuario import simular_y_exportar_usuarios, recargar_y_validar_usuarios
+from usuario.HU_29_Query_Usuario import consultas_usuario
+from usuario.HU_30_Agrupacion_Usuario import agrupaciones_usuario
+from usuario.usuario_data import generar_datos_usuario
 
 # Importaciones de módulos de Conflicto
-from concilia.domain.conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
-from concilia.domain.conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
-from concilia.domain.conflicto.HU_04_Query_Conflicto import consultas_conflicto
-from concilia.domain.conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
-from concilia.domain.conflicto.conflicto_data import generar_datos_conflicto
+from conflicto.HU_01_Limpieza_Conflicto import limpiar_conflictos
+from conflicto.HU_02_Descripcion_Conflicto import descripcion_conflictos
+from conflicto.HU_04_Query_Conflicto import consultas_conflicto
+from conflicto.HU_05_Agrupacion_Conflicto import agrupaciones_conflicto
+from conflicto.conflicto_data import generar_datos_conflicto
 
 # Configuración de FastAPI
 app = FastAPI(
