@@ -1,5 +1,5 @@
 from concilia.repositories.memory_repo import memory_repo
-from concilia.domain.usuario.usuario_data import generar_datos_usuario
+from concilia.domain.entities.usuario.usuario_data import generar_datos_usuario
 
 
 USERS_KEY = "usuarios"
@@ -51,8 +51,8 @@ import pandas as pd
 from concilia.repositories.memory_repo import memory_repo
 
 # Importar funciones existentes desde el dominio reorganizado
-from concilia.domain.usuario.usuario_data import generar_datos_usuario
-from concilia.domain.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
+from concilia.domain.entities.usuario.usuario_data import generar_datos_usuario
+from concilia.domain.entities.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
 
 
 KEY = "usuarios"

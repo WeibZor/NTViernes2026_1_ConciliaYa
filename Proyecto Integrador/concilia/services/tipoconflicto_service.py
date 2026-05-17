@@ -1,5 +1,5 @@
 from concilia.repositories.memory_repo import memory_repo
-from concilia.domain.conflicto.conflicto_data import generar_datos_conflicto
+from concilia.domain.entities.conflicto.conflicto_data import generar_datos_conflicto
 
 
 TIPOS_KEY = "tipos_conflicto"
@@ -21,8 +21,8 @@ import pandas as pd
 
 from concilia.repositories.memory_repo import memory_repo
 
-from concilia.domain.tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
-from concilia.domain.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
+from concilia.domain.entities.tipoconflicto.tipoconflicto_data import generar_datos_tipoconflicto
+from concilia.domain.entities.tipoconflicto.HU_21_Limpieza_TipoConflicto import limpiar_tipos_conflicto
 
 
 KEY = "tipoconflictos"
