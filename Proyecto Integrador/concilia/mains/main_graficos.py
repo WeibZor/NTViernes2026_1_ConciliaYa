@@ -1,8 +1,8 @@
 import pandas as pd
 
-from concilia.domain.utils.HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
-from concilia.domain.notebook.HU_6_Limpieza_EstadoConflicto import limpiar_estadosConflictos
-from concilia.domain.notebook.HU_9_Transformación_con_query_EstadoConflicto import transformar_datos_estadoConflicto
+from concilia.domain.entities.estado_conflicto.HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
+from concilia.domain.entities.estado_conflicto.HU_6_Limpieza_EstadoConflicto import limpiar_estadosConflictos
+from concilia.domain.entities.estado_conflicto.HU_9_Transformación_con_query_EstadoConflicto import transformar_datos_estadoConflicto
 
 simulacion_ec=generar_estadoConflictos(10)
 data_frame_ec=pd.DataFrame(simulacion_ec)
