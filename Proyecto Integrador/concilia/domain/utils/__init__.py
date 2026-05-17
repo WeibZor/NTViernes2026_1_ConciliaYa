@@ -1,7 +1,4 @@
-from .HU_8_Simulación_y_exportación_EstadoConflicto import generar_estadoConflictos
-from .simulacionperfil import generarPerfil
+# Paquete de utilidades generales del dominio.
+# Actualmente no expone ninguna entidad específica.
 
-__all__ = [
-    "generar_estadoConflictos",
-    "generarPerfil",
-]
+__all__ = []
