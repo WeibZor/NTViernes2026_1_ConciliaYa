@@ -1,5 +1,9 @@
 import pandas as pd
 
+# ==============================================================================
+# 1. IMPORTS DE TUS MÓDULOS (Según tu árbol de carpetas en VS Code)
+# ==============================================================================
+
 # Capa de Simulación (utils)
 from utils.simulacion_estadoconflicto import generar_estadoConflictos
 from utils.simulacion_perfil import generarPerfil
@@ -32,10 +36,11 @@ from notebook.transformacion_tipoconflicto import transformar_datos_tipoConflict
 from notebook.transformacion_conflicto import transformar_datos_conflicto
 from notebook.transformacion_mediacion import transformar_datos_mediacion
 
+# Capa de Graficación Genérica (notebook)
+from notebook.graficacion import graficar_lineas, graficar_barras, graficar_torta, graficar_mapa_calor
 
-# ==============================================================================
-# 2. CAPA DE SIMULACIÓN (Generación de Datos Sucios)
-# ==============================================================================
+#2. CAPA DE SIMULACIÓN
+
 print("=== CAPA 1: GENERANDO SIMULACIONES (1000 REGISTROS POR TABLA) ===")
 
 simulacion_ec = generar_estadoConflictos(1000)
@@ -55,10 +60,8 @@ df_med_sucio = pd.DataFrame(simulacion_med)
 
 print("✔ Todas las simulaciones han sido cargadas en DataFrames sucios.\n")
 
-
-# ==============================================================================
 # 3. CAPA DE LIMPIEZA (Procesamiento y Filtro de Basura)
-# ==============================================================================
+
 print("=== CAPA 2: EJECUTANDO LIMPIEZA DE DATOS ===")
 
 df_ec_limpio = limpiar_estadosConflictos(df_ec_sucio)
@@ -70,26 +73,9 @@ df_med_limpio = limpiar_mediacion(df_med_sucio)
 
 print("✔ Datos normalizados y filas corruptas eliminadas con éxito.\n")
 
+# 4. CAPA DE TRANSFORMACIÓN (Preparación para Gráficos)
 
-# ==============================================================================
-# 4. CAPA DE DESCRIPCIÓN (Análisis Estadístico Inicial)
-# ==============================================================================
-print("=== CAPA 3: MOSTRANDO DESCRIPCIONES Y ESTADÍSTICAS ===")
-
-describir_estadoConflictos(df_ec_limpio)
-describir_perfil(df_perf_limpio)
-describir_usuarios(df_user_limpio)
-describir_tipoConflicto(df_tc_limpio)
-describir_conflicto(df_conf_limpio)
-describir_mediacion(df_med_limpio)
-
-print("✔ Reportes de conteos, nulos y rangos numéricos impresos en consola.\n")
-
-
-# ==============================================================================
-# 5. CAPA DE TRANSFORMACIÓN (Preparación para Gráficos)
-# ==============================================================================
-print("=== CAPA 4: APLICANDO QUERIES Y AGRUPACIONES (RESÚMENES) ===")
+print("=== CAPA 3: APLICANDO QUERIES Y AGRUPACIONES (RESÚMENES) ===")
 
 resumen_transformacion_ec = transformar_datos_estadoConflictos(df_ec_limpio)
 resumen_transformacion_perf = transformar_datos_perfil(df_perf_limpio)
@@ -98,5 +84,72 @@ resumen_transformacion_tc = transformar_datos_tipoConflicto(df_tc_limpio)
 resumen_transformacion_conf = transformar_datos_conflicto(df_conf_limpio)
 resumen_transformacion_med = transformar_datos_mediacion(df_med_limpio)
 
-print("✔ Diccionarios 'agrupacion_resumen' creados para cada entidad.")
-print("=== PIPELINE DE CAPAS CONSTRUIDO CON ÉXITO ===")
+print("✔ Diccionarios 'agrupacion_resumen' creados para cada entidad.\n")
+
+
+
+# 5. CAPA DE GRAFICACIÓN (Un gráfico seleccionado por cada tabla)
+
+print("=== CAPA 4: GENERANDO GRÁFICOS ESTADÍSTICOS EN EL FRONT ===")
+
+# Gráfico 1 (Tabla: Estado Conflictos) -> ¡Gráfico de Torta!
+graficar_torta(
+    resumen_transformacion_ec["agrupacion3"],
+    columna_etiquetas="nombre",
+    columna_valores="conteo",
+    titulo="Proporción de Nombres en Estados Activos (True)",
+    nombre_archivo="torta_estados_activos.png"
+)
+
+# Gráfico 2 (Tabla: Perfil) -> ¡Gráfico de Líneas!
+graficar_lineas(
+    resumen_transformacion_perf["agrupacion2"],
+    columna_eje_x="fecha",
+    columna_eje_y="conteo",
+    titulo="Tendencia de Creación de Perfiles Activos en el Tiempo",
+    color_linea="#FF5722",
+    nombre_archivo="lineas_perfiles_activos.png"
+)
+
+# Gráfico 3 (Tabla: Usuarios) -> ¡Gráfico de Barras!
+graficar_barras(
+    resumen_transformacion_user["agrupacion2"],
+    columna_categorias="PerfilId",
+    columna_valores="conteo",
+    titulo="Cantidad de Usuarios con DNI asignados por Perfil",
+    color_barras="#2196F3",
+    nombre_archivo="barras_usuarios_dni.png"
+)
+
+# Gráfico 4 (Tabla: Tipo Conflicto) -> ¡Gráfico de Barras!
+graficar_barras(
+    resumen_transformacion_tc["agrupacion1"],
+    columna_categorias="Descripcion",
+    columna_valores="conteo",
+    titulo="Frecuencia de Descripciones en Conflictos de Tipo Pago",
+    color_barras="#4CAF50",
+    nombre_archivo="barras_descripciones_pago.png"
+)
+
+# Gráfico 5 (Tabla: Conflicto) -> ¡Mapa de Calor!
+graficar_mapa_calor(
+    resumen_transformacion_conf["agrupacion3"],
+    columna_filas="TipoConflictoId",
+    columna_columnas="EstadoConflictoId",
+    columna_valores="conteo",
+    titulo="Densidad de Casos Activos: Tipo vs Estado del Conflicto",
+    paleta_color="YlOrRd",
+    nombre_archivo="mapa_calor_conflictos_activos.png"
+)
+
+# Gráfico 6 (Tabla: Mediación) -> ¡Gráfico de Torta!
+graficar_torta(
+    resumen_transformacion_med["agrupacion2"],
+    columna_etiquetas="Resultado",
+    columna_valores="conteo",
+    titulo="Resultados de Mediaciones en Oficina Corrientes",
+    nombre_archivo="torta_resultados_corrientes.png"
+)
+
+print("\n✔ Los 6 archivos de imágenes (.png) han sido exportados exitosamente al Front-End.")
+print("=== PIPELINE TOTALMENTE FINALIZADO ===")
