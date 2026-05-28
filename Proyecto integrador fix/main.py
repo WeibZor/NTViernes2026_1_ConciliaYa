@@ -13,7 +13,7 @@ from utils.simulacion_conflicto import generar_simulacion_conflicto
 from utils.simulacion_mediacion import generar_simulacion_mediacion
 
 # Capa de Limpieza (notebook)
-from notebook.limpieza_estadoconflicto import limpiar_estadosConflictos
+from notebook.limpieza_estadoconflicto import limpiar_estadoConflictos
 from notebook.limpieza_perfil import limpiar_perfil
 from notebook.limpieza_usuraios import limpiar_usuarios  # Respetando typo del archivo
 from notebook.limpieza_tipoconflicto import limpiar_tipoConflicto
@@ -37,7 +37,7 @@ from notebook.transformacion_conflicto import transformar_datos_conflicto
 from notebook.transformacion_mediacion import transformar_datos_mediacion
 
 # Capa de Graficación Genérica (notebook)
-from notebook.graficacion import graficar_lineas, graficar_barras, graficar_torta, graficar_mapa_calor
+from notebook.graficar import graficar_lineas, graficar_barras, graficar_torta, graficar_mapa_calor
 
 #2. CAPA DE SIMULACIÓN
 
@@ -64,7 +64,7 @@ print("✔ Todas las simulaciones han sido cargadas en DataFrames sucios.\n")
 
 print("=== CAPA 2: EJECUTANDO LIMPIEZA DE DATOS ===")
 
-df_ec_limpio = limpiar_estadosConflictos(df_ec_sucio)
+df_ec_limpio = limpiar_estadoConflictos(df_ec_sucio)
 df_perf_limpio = limpiar_perfil(df_perf_sucio)
 df_user_limpio = limpiar_usuarios(df_user_sucio)
 df_tc_limpio = limpiar_tipoConflicto(df_tc_sucio)

@@ -1,5 +1,5 @@
 import pandas as pd
-import random
+import random as rd
 from datetime import datetime, timedelta
 
 
