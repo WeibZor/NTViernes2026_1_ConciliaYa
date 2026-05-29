@@ -247,7 +247,7 @@ const Login = () => {
               </p>
               <div className="text-xs text-gray-300 space-y-1">
                 <p><strong>Email:</strong> usuario1@concilia.com</p>
-                <p><strong>Password:</strong> password123</p>
+                <p><strong>Password:</strong> password1</p>
               </div>
             </motion.div>
           </motion.form>

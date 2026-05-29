@@ -34,6 +34,23 @@ uvicorn api:app --reload --port 8000
 
 El backend estará disponible en: `http://localhost:8000`
 
+#### Conexión opcional a MySQL / XAMPP
+
+Si quieres usar una base de datos real en XAMPP, configura estas variables de entorno antes de iniciar la API:
+
+```bash
+set USE_MYSQL=true
+set DB_HOST=127.0.0.1
+set DB_PORT=3306
+set DB_USER=root
+set DB_PASSWORD=
+set DB_NAME=conciliadb
+```
+
+La API intentará cargar usuarios desde la tabla `usuario` de MySQL y, si no está disponible, volverá a los datos sintéticos en memoria.
+
+> No se requieren claves API para acceder al backend o al frontend. La autenticación de usuario en la aplicación usa correo y contraseña, no un token externo o clave de servicio.
+
 ### 2. Frontend (React/Vite)
 
 ```bash

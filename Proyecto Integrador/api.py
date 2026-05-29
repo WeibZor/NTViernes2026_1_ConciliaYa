@@ -1,8 +1,25 @@
-﻿from typing import Any, Dict, List, Optional
+﻿import os
+from typing import Any, Dict, List, Optional
 
 from fastapi import FastAPI, Query, HTTPException, Body
 from fastapi.middleware.cors import CORSMiddleware
 import pandas as pd
+
+try:
+    import mysql.connector
+    from mysql.connector import Error as MySQLError
+except ImportError:
+    mysql = None
+    MySQLError = Exception
+
+FROM_DB = os.getenv('USE_MYSQL', 'false').lower() in ('1', 'true', 'yes')
+DB_CONFIG = {
+    'host': os.getenv('DB_HOST', '127.0.0.1'),
+    'port': int(os.getenv('DB_PORT', '3306')),
+    'user': os.getenv('DB_USER', 'root'),
+    'password': os.getenv('DB_PASSWORD', ''),
+    'database': os.getenv('DB_NAME', 'conciliadb'),
+}
 
 from concilia.domain.entities.usuario.usuario_data import generar_datos_usuario
 from concilia.domain.entities.usuario.HU_26_Limpieza_Usuario import limpiar_usuarios
@@ -85,6 +102,54 @@ def titlecase_columns(df: pd.DataFrame, column_map: dict) -> pd.DataFrame:
     return df.rename(columns=reverse_map)
 
 
+def query_mysql(sql: str, params=None) -> List[Dict[str, Any]]:
+    if not FROM_DB:
+        raise RuntimeError('MySQL integration is disabled. Set USE_MYSQL=true to enable it.')
+    if mysql is None:
+        raise RuntimeError('mysql-connector-python is not installed.')
+
+    connection = None
+    cursor = None
+    try:
+        connection = mysql.connector.connect(**DB_CONFIG)
+        cursor = connection.cursor(dictionary=True)
+        cursor.execute(sql, params or ())
+        return cursor.fetchall()
+    except MySQLError as exc:
+        raise RuntimeError(f'MySQL query failed: {exc}')
+    finally:
+        if cursor is not None:
+            cursor.close()
+        if connection is not None and connection.is_connected():
+            connection.close()
+
+
+def mysql_users() -> List[Dict[str, Any]]:
+    rows = query_mysql(
+        '''
+        SELECT
+            id,
+            nombre,
+            apellido,
+            tipo_documento AS tipoDocumento,
+            documento,
+            correo,
+            telefono,
+            perfil_id AS perfilId,
+            activo,
+            fecha_alta AS fechaAlta
+        FROM usuario
+        '''
+    )
+    return [
+        {
+            **row,
+            'activo': bool(row.get('activo', True)),
+        }
+        for row in rows
+    ]
+
+
 def serialize_df(df: pd.DataFrame, column_map: dict = None):
     df_serial = df.copy()
     for columna in df_serial.columns:
@@ -100,8 +165,14 @@ def serialize_df(df: pd.DataFrame, column_map: dict = None):
 def initialize_users():
     global USERS_STATE
     if USERS_STATE is None:
-        df = limpiar_usuarios(generar_datos_usuario(num_registros=1000, semilla=42))
-        USERS_STATE = [normalize_keys(record, COLUMN_MAP) for record in df.where(pd.notnull(df), None).to_dict(orient="records")]
+        if FROM_DB:
+            try:
+                USERS_STATE = mysql_users()
+            except Exception as exc:
+                print(f"Warning: MySQL users could not be loaded, falling back to synthetic data: {exc}")
+        if USERS_STATE is None:
+            df = limpiar_usuarios(generar_datos_usuario(num_registros=1000, semilla=42))
+            USERS_STATE = [normalize_keys(record, COLUMN_MAP) for record in df.where(pd.notnull(df), None).to_dict(orient="records")]
     return USERS_STATE
 
 
