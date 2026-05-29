@@ -46,8 +46,7 @@ class AuthApi {
       throw { response: { status: 401, data: { message: 'Usuario no encontrado' } } };
     }
 
-    // Simular contraseña (en producción sería hash)
-    if (credentials.password !== 'password123') {
+    if (user.password && credentials.password !== user.password) {
       throw { response: { status: 401, data: { message: 'Contraseña incorrecta' } } };
     }
 
