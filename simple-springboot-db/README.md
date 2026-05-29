@@ -1,70 +1,65 @@
-# Simple Spring Boot + MySQL Database Design
+# ConciliaYa - Spring Boot Backend (Integrado)
 
-Este proyecto contiene un diseño de base de datos sencillo para MySQL y una estructura básica de Spring Boot para manejar:
+Backend REST API en Spring Boot 3.1.6 + MySQL, integración completa del proyecto Node.js (lol).
 
-- `TipoConflicto`
-- `Perfil`
-- `Usuario`
-- `EstadoConflicto`
-- `Conflicto`
-- `Mediacion`
+## Lo que se integró desde el backend Node.js
 
-## Objetivo
+| Funcionalidad | Node.js (lol) | Spring Boot (integrado) |
+|---|---|---|
+| Login / Register JWT | `authController.js` | `AuthController.java` |
+| Password con bcrypt | `bcryptjs` | `BCryptPasswordEncoder` |
+| Middleware JWT | `middlewares/auth.js` | `JwtAuthFilter.java` |
+| CORS global | `cors()` en server.js | `SecurityConfig.java` |
+| Modelo Publicacion | `publicaciones` table | `Publicacion.java` |
+| Modelo Notificacion | `notificaciones` table | `Notificacion.java` |
+| Campo password en Usuario | `usuarios.password` | `Usuario.java` |
+| UsuarioService | directo en controller | `UsuarioService.java` |
+| ConflictoService | directo en controller | `ConflictoService.java` |
+| MediacionService | directo en controller | `MediacionService.java` |
+| Health check | `GET /api/health` | `HealthController.java` |
 
-Crear un diseño simple y limpio, con relaciones bien definidas y un API REST CRUD fácil de mantener.
+## Endpoints disponibles
 
-## Modelo relacional
+### Públicos (sin token)
+- `POST /api/auth/login` — `{ "correo": "", "password": "" }`
+- `POST /api/auth/register` — `{ "nombre": "", "apellido": "", "correo": "", "password": "" }`
+- `GET /api/health`
 
-Tablas principales:
+### Protegidos (requieren `Authorization: Bearer <token>`)
+- `GET/POST/PUT/DELETE /api/usuarios/{id}`
+- `GET/POST/PUT/DELETE /api/perfiles/{id}`
+- `GET/POST/PUT/DELETE /api/conflictos/{id}`
+- `GET/POST/PUT/DELETE /api/mediaciones/{id}`
+- `GET/POST/PUT/DELETE /api/tipos-conflicto/{id}`
+- `GET/POST/PUT/DELETE /api/estados-conflicto/{id}`
+- `GET/POST/DELETE /api/publicaciones/{id}`
+- `GET /api/notificaciones`
+- `GET /api/notificaciones/usuario/{usuarioId}`
 
-- `tipo_conflicto`
-- `perfil`
-- `estado_conflicto`
-- `usuario`
-- `conflicto`
-- `mediacion`
+## Setup
 
-Relaciones clave:
+### 1. Base de datos
+```sql
+-- Ejecutar schema.sql en MySQL
+mysql -u root -p < schema.sql
+```
 
-- `usuario.perfil_id` → `perfil.id`
-- `conflicto.usuario_demandante_id` → `usuario.id`
-- `conflicto.usuario_demandado_id` → `usuario.id`
-- `conflicto.tipo_conflicto_id` → `tipo_conflicto.id`
-- `conflicto.estado_conflicto_id` → `estado_conflicto.id`
-- `mediacion.conflicto_id` → `conflicto.id`
-- `mediacion.usuario_mediador_id` → `usuario.id`
-- `mediacion.estado_conflicto_id` → `estado_conflicto.id`
+### 2. application.properties
+```properties
+spring.datasource.url=jdbc:mysql://localhost:3306/conciliadb?useSSL=false&serverTimezone=UTC
+spring.datasource.username=root
+spring.datasource.password=TU_PASSWORD
 
-## Archivos importantes
+jwt.secret=cambiar_este_secreto_minimo_32_caracteres_seguro
+jwt.expiration=28800000
+```
 
-- `schema.sql` → script SQL completo con tablas y datos de ejemplo.
-- `pom.xml` → configuración mínima de Spring Boot.
-- `src/main/java/com/example/demo/model/` → entidades JPA.
-- `src/main/java/com/example/demo/repository/` → repositorios Spring Data.
-- `src/main/java/com/example/demo/controller/` → controladores REST CRUD.
+### 3. Correr
+```bash
+mvn spring-boot:run
+```
+El servidor levanta en `http://localhost:8080`
 
-## Cómo usar
-
-1. Crear la base de datos en MySQL con `schema.sql`.
-2. Ajustar `src/main/resources/application.properties` con el usuario y contraseña de MySQL.
-3. Ejecutar la aplicación Spring Boot.
-
-## API REST de ejemplo
-
-- `GET /api/usuarios`
-- `GET /api/usuarios/{id}`
-- `POST /api/usuarios`
-- `PUT /api/usuarios/{id}`
-- `DELETE /api/usuarios/{id}`
-
-- `GET /api/conflictos`
-- `GET /api/conflictos/{id}`
-- `POST /api/conflictos`
-- `PUT /api/conflictos/{id}`
-- `DELETE /api/conflictos/{id}`
-
-- `GET /api/mediaciones`
-- `GET /api/mediaciones/{id}`
-- `POST /api/mediaciones`
-- `PUT /api/mediaciones/{id}`
-- `DELETE /api/mediaciones/{id}`
+## Dependencias nuevas en pom.xml
+- `spring-boot-starter-security`
+- `jjwt-api`, `jjwt-impl`, `jjwt-jackson` (versión 0.11.5)
