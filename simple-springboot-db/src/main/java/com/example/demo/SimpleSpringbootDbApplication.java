@@ -10,3 +10,4 @@ public class SimpleSpringbootDbApplication {
         SpringApplication.run(SimpleSpringbootDbApplication.class, args);
     }
 }
+//login
