@@ -1,67 +1,25 @@
-import mediacionRepository from '../repositories/mediacionRepository.js';
+import api from './apiClient.js';
 
 class MediacionesApi {
   async getAll(params = {}) {
-    try {
-      if (params.page) {
-        return await mediacionRepository.paginate(params.page, params.limit || 10);
-      }
-      if (params.search) {
-        return await mediacionRepository.search(params.search);
-      }
-      if (Object.keys(params).length > 0) {
-        return await mediacionRepository.filter(params);
-      }
-      return await mediacionRepository.getAll();
-    } catch (error) {
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+    const response = await api.get('/mediaciones', { params });
+    return response.data;
   }
-
   async getById(id) {
-    try {
-      const mediacion = await mediacionRepository.getById(parseInt(id));
-      if (!mediacion) {
-        throw { response: { status: 404, data: { message: 'Mediación no encontrada' } } };
-      }
-      return mediacion;
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+    const response = await api.get(`/mediaciones/${id}`);
+    return response.data;
   }
-
   async create(data) {
-    try {
-      const mediacion = await mediacionRepository.create(data);
-      return { data: mediacion, status: 201 };
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 400, data: { message: 'Datos inválidos' } } };
-    }
+    const response = await api.post('/mediaciones', data);
+    return { data: response.data, status: 201 };
   }
-
   async update(id, data) {
-    try {
-      const mediacion = await mediacionRepository.update(parseInt(id), data);
-      if (!mediacion) {
-        throw { response: { status: 404, data: { message: 'Mediación no encontrada' } } };
-      }
-      return { data: mediacion };
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 400, data: { message: 'Datos inválidos' } } };
-    }
+    const response = await api.put(`/mediaciones/${id}`, data);
+    return { data: response.data };
   }
-
   async delete(id) {
-    try {
-      const result = await mediacionRepository.delete(parseInt(id));
-      return { data: { message: 'Mediación eliminada' } };
-    } catch (error) {
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+    await api.delete(`/mediaciones/${id}`);
+    return { data: { message: 'Mediación eliminada' } };
   }
 }
-
 export default new MediacionesApi();
