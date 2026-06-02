@@ -1,67 +1,25 @@
-import perfilRepository from '../repositories/perfilRepository.js';
+import api from './apiClient.js';
 
 class PerfilesApi {
-  async getAll(params = {}) {
-    try {
-      if (params.page) {
-        return await perfilRepository.paginate(params.page, params.limit || 10);
-      }
-      if (params.search) {
-        return await perfilRepository.search(params.search);
-      }
-      if (Object.keys(params).length > 0) {
-        return await perfilRepository.filter(params);
-      }
-      return await perfilRepository.getAll();
-    } catch (error) {
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+  async getAll() {
+    const response = await api.get('/perfiles');
+    return response.data;
   }
-
   async getById(id) {
-    try {
-      const perfil = await perfilRepository.getById(parseInt(id));
-      if (!perfil) {
-        throw { response: { status: 404, data: { message: 'Perfil no encontrado' } } };
-      }
-      return perfil;
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+    const response = await api.get(`/perfiles/${id}`);
+    return response.data;
   }
-
   async create(data) {
-    try {
-      const perfil = await perfilRepository.create(data);
-      return { data: perfil, status: 201 };
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 400, data: { message: 'Datos inválidos' } } };
-    }
+    const response = await api.post('/perfiles', data);
+    return { data: response.data, status: 201 };
   }
-
   async update(id, data) {
-    try {
-      const perfil = await perfilRepository.update(parseInt(id), data);
-      if (!perfil) {
-        throw { response: { status: 404, data: { message: 'Perfil no encontrado' } } };
-      }
-      return { data: perfil };
-    } catch (error) {
-      if (error.response) throw error;
-      throw { response: { status: 400, data: { message: 'Datos inválidos' } } };
-    }
+    const response = await api.put(`/perfiles/${id}`, data);
+    return { data: response.data };
   }
-
   async delete(id) {
-    try {
-      const result = await perfilRepository.delete(parseInt(id));
-      return { data: { message: 'Perfil eliminado' } };
-    } catch (error) {
-      throw { response: { status: 500, data: { message: 'Error interno del servidor' } } };
-    }
+    await api.delete(`/perfiles/${id}`);
+    return { data: { message: 'Perfil eliminado' } };
   }
 }
-
 export default new PerfilesApi();
